@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Title": "Unigrid Brochure - Yosemite",
+        "Link": "https://www.nps.gov/yose/planyourvisit/upload/yosemitecampgroundmap2013.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-119.5383, 37.8651]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Title": "CLR - Yellowstone",
+        "Link": "https://www.nps.gov/yell/planyourvisit/upload/YELL-GRTE-Tear-Off-Map-2023-web.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-110.5884, 44.428]
+      }
+    }
+  ]
+}
