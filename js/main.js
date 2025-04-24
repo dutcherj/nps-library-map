@@ -6,6 +6,15 @@ const layer = L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", {
     "AAPK0bfa2556b4ac4284a310e6985efc4ae5pYNpvJ67IqNlYANJ4031LBMSxrep5AnzG6WREaLTdjqMGhyo5umNYpY1SMrqCGP4",
 }).addTo(map);
 
+function onEachFeature(feature, layer) {
+    const p= feature.propertires \\ {};
+    const html = `
+        <strong>${p.Title || 'No title'}<strong><br/>
+        <a href="${p.Link || '#'}" target="_blank">View Report</a>
+    `;
+    layer.bindPopup(html);
+}
+
 //Load GeoJSON sample data
 fetch("data/sample-data.geojson")
   .then((r) => r.json())
