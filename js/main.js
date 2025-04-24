@@ -7,7 +7,7 @@ const layer = L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", {
 }).addTo(map);
 
 function onEachFeature(feature, layer) {
-  const p = feature.propertires || {};
+  const p = feature.properties || {};
   const html = `
         <strong>${p.Title || "No title"}<strong><br/>
         <a href="${p.Link || "#"}" target="_blank">View Report</a>
