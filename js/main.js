@@ -7,22 +7,23 @@ const layer = L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", {
 
 //Load GeoJSON sample data
 fetch('data/sample-data.geojson')
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
-        const geoJsonLayer = L.geoJSON(data, {
-            onEachFeature: (feature, layer) => {
-                const props = feature.properties || {}; //fallback to empty object
-                
-                const popupContent = `
-                    <strong>${props.Title || 'NO TITLE'}</strong><br/>
-                    <a href="${props.Link || '#'}" target="_blank">View Report</a>
-                `;
-                    layer.bindPopup(popupContent);
-    }
-        });
 
-const cluster = L.markerClusterGroup();
-cluster.addLayer(geoJsonLayer);
-map.addLayer(cluster);
-map.fitBounds(cluster.getBounds());
+        const points = L.geoJSON(data, {
+            filter: f => f.geometry.type == 'Point',
+            onEachFeature,
+            pointToLayer: (f, latlng) => L.marker(latlng)
+        });
+        const cluster = L.markerClusterGroup().addLayer(points);
+        map.addLayer(cluster);
+        
+        const polys = L.geoJSON(data, {
+            filter: f => f.geometry.type !=='Point'
+            onEachFeature: 
+            style: {color: 'steelblue', weight: 1, fillOpacity: 0.2}
+        });
+        map.addLayer(polys);
+
+        map.fitBounds(L.featureGroung([cluster, polys]).getBounds());
     });
