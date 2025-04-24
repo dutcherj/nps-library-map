@@ -37,5 +37,5 @@ fetch("data/sample-data.geojson")
     const bound = L.latLngBounds([]);
     if (cluster.getLayers().length) bound.extend(cluster.getBounds());
     if (polys.getLayers().length) bound.extend(polys.getBounds());
-    if (bounds.isValid()) map.fitBounds(bounds);
+    if (bounds.isValid()) map.fitBounds(bound);
   });
