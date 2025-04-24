@@ -34,5 +34,8 @@ fetch("data/sample-data.geojson")
     });
     map.addLayer(polys);
 
-    map.fitBounds(L.featureGroup([cluster, polys]).getBounds());
+    const bound = L.latlngBounds([]);
+    if (cluster.getLayers().length) bounds.extend(cluster.getBounds());
+    if (polys.getLayers().length) bounds.extend(polys.getBounds());
+    if (bounds.isValid()) map.fitBounds(bounds);
   });
