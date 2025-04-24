@@ -8,7 +8,7 @@
         "Link": "https://irma.nps.gov/DataStore/Reference/Profile/643892"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiPoint",
         "coordinates": {
           "1": [-77.7406, 39.3255],
           "2": [-105.0777, 39.6517]
@@ -18,22 +18,11 @@
     {
       "type": "Feature",
       "properties": {
-        "Title": "World War II and the American Home Front",
-        "Link": "https://irma.nps.gov/DataStore/Reference/Profile/2193659"
-      },
-      "geometry": {
-        "type": "point",
-        "coordinates": [-122.3671, 37.9083]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "Title": "Air quality related values (AQRVs) for Southeast Coast Network (SECN) parks: Effects from ozone; visibility reducing particles; and atmospheric deposition of acids, nutrients and toxics",
         "Link": "https://irma.nps.gov/DataStore/Reference/Profile/2229205"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiPoint",
         "coordinates": {
           "1": [-75.6029, 35.2368],
           "2": [-76.3484, 34.825],
@@ -66,7 +55,7 @@
         "Link": "https://irma.nps.gov/DataStore/Reference/Profile/2230633"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiPoint",
         "coordinates": {
           "1": [-85.6443, 37.6116],
           "2": [-68.2397, 44.3594],
@@ -442,7 +431,7 @@
         "Link": "https://irma.nps.gov/DataStore/Reference/Profile/2208703"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiPoint",
         "coordinates": {
           "1": [-105.0777, 39.6517],
           "2": [-111.1433, 38.1704],
