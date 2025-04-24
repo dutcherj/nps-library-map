@@ -7,12 +7,12 @@ const layer = L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", {
 }).addTo(map);
 
 function onEachFeature(feature, layer) {
-    const p= feature.propertires \\ {};
-    const html = `
-        <strong>${p.Title || 'No title'}<strong><br/>
-        <a href="${p.Link || '#'}" target="_blank">View Report</a>
+  const p = feature.propertires || {};
+  const html = `
+        <strong>${p.Title || "No title"}<strong><br/>
+        <a href="${p.Link || "#"}" target="_blank">View Report</a>
     `;
-    layer.bindPopup(html);
+  layer.bindPopup(html);
 }
 
 //Load GeoJSON sample data
