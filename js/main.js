@@ -17,10 +17,10 @@ fetch('data/sample-data.geojson')
         });
         const cluster = L.markerClusterGroup().addLayer(points);
         map.addLayer(cluster);
-        
+
         const polys = L.geoJSON(data, {
             filter: f => f.geometry.type !=='Point'
-            onEachFeature: 
+            onEachFeature,
             style: {color: 'steelblue', weight: 1, fillOpacity: 0.2}
         });
         map.addLayer(polys);
