@@ -1,7 +1,7 @@
 
 library(jsonlite)
 
-data_dir <- "D:/Downloads/nps-library-map-master.5.06 Archive 10k Samples/reports"
+data_dir <- "C:/Users/jdutcher/OneDrive - DOI/Desktop/Library Map Project/nps-library-map-master.5.06 Archive 10k Samples/reports"
 
 json_files <- list.files(data_dir, "\\.json$", full.names = TRUE)
 features   <- list()
@@ -40,7 +40,7 @@ for (f in json_files) {
     # ── split into lon/lat pairs, drop dups, flip to [lat, lon] ─────────────
     pairs <- matrix(nums, ncol = 2, byrow = TRUE)             # [lon, lat]
     pairs <- unique(pairs)                                    # kill dup rows
-    pairs <- pairs[, c(2, 1), drop = FALSE]                   # → [lat, lon]
+    # pairs <- pairs[, c(2, 1), drop = FALSE]                   # → [lat, lon]
     
     geom <- if (nrow(pairs) == 1) {
       list(type = "Point", coordinates = as.numeric(pairs[1, ]))
@@ -73,8 +73,24 @@ for (f in json_files) {
   }
 }
 
-geojson <- list(type = "FeatureCollection", features = features)
-writeLines(toJSON(geojson, auto_unbox = TRUE, pretty = TRUE),
-           "sample-data.geojson")
+max_bytes <- 15L * 1024^2
 
-cat("Completed! Wrote", length(features), "features to combined-data.geojson\n")
+feat_bytes <- vapply(features, function(ft)
+  nchar(jsonlite::toJSON(ft, auto_unbox = TRUE, pretty = FALSE), type = "bytes") + 2L,
+  integer(1)
+)
+
+bucket <- cumsum(feat_bytes) %/% max_bytes + 1L   # 1, 2, 3, …
+
+invisible(Map(function(idx, chunk) {
+  outfile <- sprintf("sample-data-part%03d.geojson", idx)
+  writeLines(
+    jsonlite::toJSON(
+      list(type = "FeatureCollection", features = chunk),
+      auto_unbox = TRUE, pretty = TRUE
+    ),
+    outfile
+  )
+}, sort(unique(bucket)), split(features, bucket)))
+
+cat("Done – wrote", max(bucket), "file(s) under 20 MB each.\n")

@@ -9,19 +9,33 @@ const layer = L.esri.Vector.vectorBasemapLayer("ArcGIS:Topographic", {
 }).addTo(map);
 
 function onEachFeature(feature, layer) {
-  const p = feature.properties || {};
-  const html = `
-        <strong>${p.Title || "No title"}<strong><br/>
-        <a href="${p.Link || "#"}" target="_blank">View Report</a>
-    `;
-  layer.bindPopup(html);
+  const props = feature.properties ?? {};
+
+  const html = Object.entries(props)
+    .map(([k, v]) => {
+      if (k.toLowerCase() === "link") {
+        return `<strong>${k}:</strong> <a href="${v}" target="_blank">${v}</a>`;
+      }
+      if (Array.isArray(v)) {
+        return `<strong>${k}:</strong> ${v.join(", ")}`;
+      }
+      return `<strong>${k}:</strong> ${v}`;
+    })
+    .join("<br>");
+
+  if (layer instanceof L.FeatureGroup) {
+    layer.eachLayer(child => child.bindPopup(html));
+  } else {
+    layer.bindPopup(html);
+  }
 }
 
 //Load GeoJSON sample data
-fetch("data/sample-data.geojson")
-  .then((r) => r.json())
-  .then((data) => {
-    allData = data;
+// fetch("data/sample-data.geojson")
+//   .then((r) => r.json())
+//   .then((data) => {
+//     allData = data
+//   };
 
 fetch(manifestURL)
   .then(r => r.json())
@@ -37,37 +51,29 @@ fetch(manifestURL)
 
     const bound = L.latLngBounds([]);
     if (cluster.getLayers().length) bound.extend(cluster.getBounds());
-    if (polys.getLayers().length) bound.extend(polys.getBounds());
     if (bound.isValid()) map.fitBounds(bound);
   });
 
 function runSearch() {
+  if (!allData || !cluster) return;
+  
   const q = document.getElementById("search").value.trim().toLowerCase();
-
-  cluster.clearLayers();
-  map.removeLayer(polys);
   cluster.clearLayers();
 
   const matches = f =>
     q === "" || (f.properties?.Title || "").toLowerCase().includes(q);
 
   const pts = L.geoJSON(allData, {
-    filter: f => f.geometry.type === "Point" && matches(f),
+    filter: f =>
+      ["Point", "MultiPoint"].includes(f.geometry.type) && matches(f),
     onEachFeature,
-    pointToLayer: (f, latlng) => L.marker(latlng),
+    pointToLayer: (_, latlng) => L.marker(latlng),
   });
+  
   cluster.addLayer(pts);
-
-  polys = L.geoJSON(allData, {
-    filter: f => f.geometry.type !== "Point" && matches(f),
-    onEachFeature,
-    style: { color: "steelblue", weight: 1, fillOpacity: 0.2 },
-  });
-  map.addLayer(polys);
 
   const b = L.latLngBounds([]);
   if (cluster.getLayers().length) b.extend(cluster.getBounds());
-  if (polys.getLayers().length)   b.extend(polys.getBounds());
   if (b.isValid()) map.fitBounds(b);
 }
 
