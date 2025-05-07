@@ -24,7 +24,7 @@ function onEachFeature(feature, layer) {
     .join("<br>");
 
   if (layer instanceof L.FeatureGroup) {
-    layer.eachLayer(child => child.bindPopup(html));
+    layer.eachLayer((child) => child.bindPopup(html));
   } else {
     layer.bindPopup(html);
   }
@@ -38,15 +38,16 @@ function onEachFeature(feature, layer) {
 //   };
 
 fetch(manifestURL)
-  .then(r => r.json())
-  .then(list => Promise.all(list.map(u => fetch(u).then(r => r.json()))))
-  .then(collections => {
+  .then((r) => r.json())
+  .then((list) => Promise.all(list.map((u) => fetch(u).then((r) => r.json()))))
+  .then((collections) => {
     allData = {
       type: "FeatureCollection",
-      features: collections.flatMap(c => c.features ?? [])
+      features: collections.flatMap((c) => c.features ?? []),
     };
-    
-    cluster = L.markerClusterGroup();
+
+    // cluster = L.markerClusterGroup();
+    cluster = L.LayerGroup();
     map.addLayer(cluster);
 
     const bound = L.latLngBounds([]);
@@ -56,20 +57,20 @@ fetch(manifestURL)
 
 function runSearch() {
   if (!allData || !cluster) return;
-  
+
   const q = document.getElementById("search").value.trim().toLowerCase();
   cluster.clearLayers();
 
-  const matches = f =>
+  const matches = (f) =>
     q === "" || (f.properties?.Title || "").toLowerCase().includes(q);
 
   const pts = L.geoJSON(allData, {
-    filter: f =>
+    filter: (f) =>
       ["Point", "MultiPoint"].includes(f.geometry.type) && matches(f),
     onEachFeature,
     pointToLayer: (_, latlng) => L.marker(latlng),
   });
-  
+
   cluster.addLayer(pts);
 
   const b = L.latLngBounds([]);
@@ -77,9 +78,7 @@ function runSearch() {
   if (b.isValid()) map.fitBounds(b);
 }
 
-document
-  .getElementById("searchBtn")
-  .addEventListener("click", runSearch);
-document
-  .getElementById("search")
-  .addEventListener("keyup", e => { if (e.key === "Enter") runSearch(); });
+document.getElementById("searchBtn").addEventListener("click", runSearch);
+document.getElementById("search").addEventListener("keyup", (e) => {
+  if (e.key === "Enter") runSearch();
+});
