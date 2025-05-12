@@ -47,7 +47,7 @@ fetch(manifestURL)
     };
 
     // cluster = L.markerClusterGroup();
-    cluster = L.LayerGroup();
+    cluster = L.featureGroup();
     map.addLayer(cluster);
 
     const bound = L.latLngBounds([]);
